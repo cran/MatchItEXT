@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>MatchItEXT: Supplementary to MatchIt</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+          color: #aaaaaa;
+        }
+      pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+      code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+      code span.at { color: #7d9029; } /* Attribute */
+      code span.bn { color: #40a070; } /* BaseN */
+      code span.bu { } /* BuiltIn */
+      code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+      code span.ch { color: #4070a0; } /* Char */
+      code span.cn { color: #880000; } /* Constant */
+      code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+      code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+      code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+      code span.dt { color: #902000; } /* DataType */
+      code span.dv { color: #40a070; } /* DecVal */
+      code span.er { color: #ff0000; font-weight: bold; } /* Error */
+      code span.ex { } /* Extension */
+      code span.fl { color: #40a070; } /* Float */
+      code span.fu { color: #06287e; } /* Function */
+      code span.im { } /* Import */
+      code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+      code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+      code span.op { color: #666666; } /* Operator */
+      code span.ot { color: #007020; } /* Other */
+      code span.pp { color: #bc7a00; } /* Preprocessor */
+      code span.sc { color: #4070a0; } /* SpecialChar */
+      code span.ss { color: #bb6688; } /* SpecialString */
+      code span.st { color: #4070a0; } /* String */
+      code span.va { color: #19177c; } /* Variable */
+      code span.vs { color: #4070a0; } /* VerbatimString */
+      code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">MatchItEXT: Supplementary to MatchIt</h1>
+
+
+
+<p>MatchItEXT is a supplementary package to MatchIt. As the name implies, it can be regarded as an extension of MatchIt. It draws on the results from the latter to do further computation or plotting and to generate several outputs that are not available in MatchIt. A researcher might be interested in these outputs because they can help diagnose the matching result.</p>
+<p>For now, functions in MatchItEXT (0.1.0) mainly include the following three aspects:</p>
+<ol style="list-style-type: decimal">
+<li>Computing Standardized Mean Difference (SMD).</li>
+<li>Drawing two types of comparison plot before and after matching to show the matching result.</li>
+<li>Computing two types of variance ratio as diagnostics of the matching result.</li>
+</ol>
+<p>This tutorial will use the data set <em>lalonde</em> in MatchIt to demonstrate how to apply MatchItEXT functions. The readers of this tutorial are assumed to have used MatchIt package before. Note the analyses below are only for the purpose of demonstration, and without a solid theoretical foundation. Therefore, the result of matching in this tutorial is not of substantial meaning. The interpretation of results is omitted.</p>
+<div id="step-1-loading-the-required-packages-and-data-set" class="section level6">
+<h6>Step 1: Loading the required packages and data set</h6>
+<p>First of all, if the required packages are not installed yet, we need install them first. If they have been installed, this step can be skipped.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pkg <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MatchIt&quot;</span>, <span class="st">&quot;MatchItEXT&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(pkg)</span></code></pre></div>
+<p>Then, we can load required packages and example data set <em>lalonde</em>. If you are not familiar with this data set, please refer to the documentation of MatchIt package. Note there are different versions of <em>lalonde</em> data set online, the sample size and variable names might slightly differ from each other.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchItEXT)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(lalonde)</span></code></pre></div>
+</div>
+<div id="step-2-checking-data-set-lalonde" class="section level6">
+<h6>Step 2: Checking data set lalonde</h6>
+<p>Since the data set has been loaded, we can have a glance at it.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Checking the size and structure of lalonde.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(lalonde)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;data.frame&#39;:    614 obs. of  10 variables:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ treat   : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ age     : int  37 22 30 27 33 22 23 32 22 33 ...</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ educ    : int  11 9 12 11 8 9 12 11 16 12 ...</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ black   : int  1 0 1 1 1 1 1 1 1 0 ...</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ hispan  : int  0 1 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ married : int  1 0 0 0 0 0 0 0 0 1 ...</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ nodegree: int  1 1 0 1 1 1 0 1 0 0 ...</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ re74    : num  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ re75    : num  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  $ re78    : num  9930 3596 24909 7506 290 ...</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Checking the first 5 rows of lalonde.</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(lalonde, <span class="dv">5</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      treat age educ black hispan married nodegree re74 re75       re78</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NSW1     1  37   11     1      0       1        1    0    0  9930.0460</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NSW2     1  22    9     0      1       0        1    0    0  3595.8940</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NSW3     1  30   12     1      0       0        0    0    0 24909.4500</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NSW4     1  27   11     1      0       0        1    0    0  7506.1460</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NSW5     1  33    8     1      0       0        1    0    0   289.7899</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Checking whether there is any missing value in each column.</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(lalonde, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    treat      age     educ    black   hispan  married nodegree     re74 </span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        0        0        0        0        0        0        0        0 </span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     re75     re78 </span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        0        0</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="do">## No missing value was found.</span></span></code></pre></div>
+</div>
+<div id="step-3-generating-a-matchit-result" class="section level6">
+<h6>Step 3: Generating a MatchIt result</h6>
+<p>To use the functions in MatchItEXT, most of the time we need results from MatchIt. So we would first generate an example from matchit() for later use. if you are new to MatchIt, please refer to its official tutorial (Ho et al., 2001).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Noticing that dichotomous variables that would be used  are of numeric type, </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">## they should be converted to factor type beforehand.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>lalonde<span class="sc">$</span>treat <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(lalonde<span class="sc">$</span>treat)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>lalonde<span class="sc">$</span>black <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(lalonde<span class="sc">$</span>black)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>lalonde<span class="sc">$</span>hispan <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(lalonde<span class="sc">$</span>hispan)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Creating a propensity score estimation formula.</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="do">## In the formula, treat, black, and hispan are treated as binary variables.</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>formu <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(treat <span class="sc">~</span> re74 <span class="sc">+</span> re75 <span class="sc">+</span> age <span class="sc">+</span> educ <span class="sc">+</span> black <span class="sc">+</span> hispan)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying Nearest neighbor matching on the selected covariates. The result </span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="do">## would be used as an input in the MatchItEXT functions. You can try other </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="do">## matching methods such as &quot;optimal&quot;, &quot;full, &quot;genetic&quot;, etc.</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>m_near <span class="ot">&lt;-</span> MatchIt<span class="sc">::</span><span class="fu">matchit</span>(<span class="at">formula =</span> formu, <span class="at">data =</span> lalonde, <span class="at">distance =</span> <span class="st">&quot;logit&quot;</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">&quot;nearest&quot;</span>)</span></code></pre></div>
+</div>
+<div id="step-4-computing-the-standardized-mean-difference-smd" class="section level6">
+<h6>Step 4: Computing the Standardized Mean Difference (SMD)</h6>
+<p>SMD is defined as the difference between the focal and reference group divided by a standard deviation (Austin, 2011). If we compute the SMD before and after matching, we would know whether the SMD is broadened or narrowed after matching. Thus, it can be used as a diagnostic of matching result. An absolute value of SMD less than 0.1 is considered as an acceptable value that shows enough similarity between groups (Austin, 2011). MatchItEXT applies formulae provided by Austin (2011) to compute SMD. Note the formula for continuous variables differs from that for binary variables. For multiple categorical variables, they can be represented by a bunch of binary variables (Austin, 2011).</p>
+<p>As for the computation of standard deviation (SD), usually there are two options . One is a simple pooled SD based on both treatment group and control group before matching. The other is just the SD of original treatment group. N.B. that MatchIt package uses the latter (Ho et al., 2011). Thus, there is a <em>sd</em> argument in the function, if you want to be consistent with MatchIt, you can choose “treatment”. The default is “pooled”. Also note the SMD can be larger than one, which just means the difference is larger than one SD.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing Standardized Mean Difference (SMD).</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## If the matching result is satisfying, most SMD after matching would drop in </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## the range of -0.1 ~ 0.1, see the column &quot;smd_after&quot;.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>smd_near <span class="ot">&lt;-</span> <span class="fu">compute_smd</span>(<span class="at">mi_obj =</span> m_near, <span class="at">sd =</span> <span class="st">&quot;pooled&quot;</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>smd_near</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            mean_tr_bf  mean_ctl_bf   mean_tr_af  mean_ctl_af   var_type</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; distance 5.658457e-01    0.1872227 5.658457e-01    0.3649324 continuous</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re74     2.095574e+03 5619.2365064 2.095574e+03 2466.3038679 continuous</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re75     1.532055e+03 2466.4844431 1.532055e+03 1960.3548418 continuous</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age      2.581622e+01   28.0303030 2.581622e+01   26.0540541 continuous</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ     1.034595e+01   10.2354312 1.034595e+01   10.4702703 continuous</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black0   1.567568e-01    0.7972028 1.567568e-01    0.5297297     binary</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black1   8.432432e-01    0.2027972 8.432432e-01    0.4702703     binary</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hispan1  5.945946e-02    0.1421911 5.945946e-02    0.2756757     binary</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             var_tr_bf   var_ctl_bf sd_bf_pooled     sd_bf_tr  smd_before</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; distance 4.464654e-02 5.326882e-02    0.2212638    0.2112973  1.71118342</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re74     2.387906e+07 4.608714e+07 5914.6511246 4886.6203532 -0.59575159</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re75     1.036358e+07 1.083724e+07 3255.8267026 3219.2508699 -0.28700211</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age      5.119430e+01 1.163519e+02    9.1527642    7.1550193 -0.24190362</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ     4.042714e+00 8.152387e+00    2.4693219    2.0106503  0.04475509</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black0   1.321841e-01 1.616705e-01    0.3833110    0.3635713 -1.67082635</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black1   1.321841e-01 1.616705e-01    0.3833110    0.3635713  1.67082635</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hispan1  5.592403e-02 1.219728e-01    0.2982422    0.2364826 -0.27739761</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            smd_after</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; distance  0.90802605</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re74     -0.06267997</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re75     -0.13154863</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age      -0.02598536</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ     -0.05034756</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black0   -0.97302978</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black1    0.97302978</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hispan1  -0.72496848</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="do">## Column names explanation:</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="do">## mean_tr_bf: mean of treatment group before matching</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="do">## mean_ctl_bf: mean of control group before matching</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="do">## mean_tr_af: mean of treatment group after matching</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="do">## mean_ctl_af: mean of control group after matching</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="do">## var_type: variable type</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="do">## var_tr_bf: variance of treatment group before matching</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="do">## var_ctl_bf: variance of control group before matching</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="do">## sd_bf_pooled: pooled standard deviation before matching</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="do">## sd_bf_tr: standard deviation of treatment group before matching</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="do">## smd_before: SMD before matching</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="do">## smd_after: SMD after matching</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="do">## Switching &quot;pooled&quot; SD to &quot;treatment&quot; SD.</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>smd_near <span class="ot">&lt;-</span> <span class="fu">compute_smd</span>(<span class="at">mi_obj =</span> m_near, <span class="at">sd =</span> <span class="st">&quot;treatment&quot;</span>)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>smd_near</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            mean_tr_bf  mean_ctl_bf   mean_tr_af  mean_ctl_af   var_type</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; distance 5.658457e-01    0.1872227 5.658457e-01    0.3649324 continuous</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re74     2.095574e+03 5619.2365064 2.095574e+03 2466.3038679 continuous</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re75     1.532055e+03 2466.4844431 1.532055e+03 1960.3548418 continuous</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age      2.581622e+01   28.0303030 2.581622e+01   26.0540541 continuous</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ     1.034595e+01   10.2354312 1.034595e+01   10.4702703 continuous</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black0   1.567568e-01    0.7972028 1.567568e-01    0.5297297     binary</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black1   8.432432e-01    0.2027972 8.432432e-01    0.4702703     binary</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hispan1  5.945946e-02    0.1421911 5.945946e-02    0.2756757     binary</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             var_tr_bf   var_ctl_bf sd_bf_pooled     sd_bf_tr  smd_before</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; distance 4.464654e-02 5.326882e-02    0.2212638    0.2112973  1.79189717</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re74     2.387906e+07 4.608714e+07 5914.6511246 4886.6203532 -0.72108381</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re75     1.036358e+07 1.083724e+07 3255.8267026 3219.2508699 -0.29026291</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age      5.119430e+01 1.163519e+02    9.1527642    7.1550193 -0.30944526</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ     4.042714e+00 8.152387e+00    2.4693219    2.0106503  0.05496466</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black0   1.321841e-01 1.616705e-01    0.3833110    0.3635713 -1.76154189</span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black1   1.321841e-01 1.616705e-01    0.3833110    0.3635713  1.76154189</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hispan1  5.592403e-02 1.219728e-01    0.2982422    0.2364826 -0.34984254</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            smd_after</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; distance  0.95085617</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re74     -0.07586638</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; re75     -0.13304323</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; age      -0.03324070</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; educ     -0.06183289</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black0   -1.02585928</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; black1    1.02585928</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; hispan1  -0.91430064</span></span></code></pre></div>
+<p>From the above results, the first row “distance” denotes the overall distance measure (i.e., the propensity score in our case). It follows a set of covariates used in the formula. The last two columns in the data frame are SMD before and after matching.</p>
+<p>MatchIt package supports various matching methods. As of version 3.0.2, it can apply six methods, including “exact”, “full”, “genetic”, “nearest”, “optimal”, and “subclass”. Among these methods, the result of “full”, “genetic”, “nearest”, and “optimal” are applicable to compute_smd(), while the result of “exact” is not applicable. For the result of “subclass”, we can apply compute_sub_smd(), as shown below.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Generating a subclassification result from matchit() with the same formula.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>m_sub <span class="ot">&lt;-</span> MatchIt<span class="sc">::</span><span class="fu">matchit</span>(<span class="at">formula =</span> formu, <span class="at">data =</span> lalonde, <span class="at">distance =</span> <span class="st">&quot;logit&quot;</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">&quot;subclass&quot;</span>, <span class="at">subclass =</span> <span class="dv">5</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>smd_sub <span class="ot">&lt;-</span> <span class="fu">compute_sub_smd</span>(<span class="at">mi_obj =</span> m_sub, <span class="at">sd =</span> <span class="st">&quot;pooled&quot;</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="do">## The threshold of good matching for SMD is ± 0.1. The closer to 0, the better.</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>smd_sub</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.2615758</span></span></code></pre></div>
+<p>Different from compute_smd(), the result of compute_sub_smd() only provides a single SMD, indicating the overall difference of distance measure after subclassification. There is no separate SMD for each covariate when using subclassification method.</p>
+</div>
+<div id="step-5-drawing-smd-comparison-dot-and-line-plot" class="section level6">
+<h6>Step 5: Drawing SMD comparison dot-and-line plot</h6>
+<p>Although MatchIt provides a function to draw similar dot-and-line comparison plot (e.g., plot(summary(m_near, standardize = TRUE))), the following plot function differs from its counterpart in that:</p>
+<ol style="list-style-type: decimal">
+<li>coloring different types of variable: SMD of overall distance is colored in blue, increased SMD after matching is colored in red, unchanged SMD is colored in green, and decreased SMD is colored in gray.</li>
+<li>using original SMD rather than the absolute value of SMD. Hence, there would be negative SMD.</li>
+<li>drawing horizontal lines of -0.2, -0.1, 0.1, and 0.2 to help distinguish matching result areas.</li>
+<li>providing R code for further revision if the user is not satisfied with the plot.</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## If the matching result is satisfying, most SMD after matching would rest in </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## the range of -0.1 ~ 0.1.</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plot_smd_near <span class="ot">&lt;-</span> <span class="fu">plot_smd</span>(smd_near)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plot_smd_near<span class="sc">$</span>plot</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Increased SMD are stored in the returning result, R code for plotting and </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## other relevant data are available as well, use &#39;$&#39; to obtain them.</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plot_smd_near<span class="sc">$</span>smd_increase</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       var  smd_before   smd_after    trend</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    educ  0.05496466 -0.06183289 increase</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 hispan1 -0.34984254 -0.91430064 increase</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plot_smd_near<span class="sc">$</span>plot_code</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ggplot(data = df, aes(x = stage, y = .data$smd, group = var)) + </span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     labs(title = &quot;Comparison of SMD Before and After Matching&quot;, </span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         x = NULL, y = &quot;Standardized Mean Difference&quot;) + geom_hline(yintercept = c(-0.2, </span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     -0.1, 0, 0.1, 0.2), color = &quot;gray90&quot;) + scale_y_continuous(breaks = round(seq(-0.3, </span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     1, 0.1), digits = 1)) + scale_x_discrete(breaks = c(&quot;smd_before&quot;, </span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &quot;smd_after&quot;), labels = c(&quot;All Data&quot;, &quot;Matched Data&quot;)) + geom_line(aes(colour = .data$trend)) + </span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     geom_point(aes(colour = .data$trend)) + theme_bw() + theme(panel.grid.major = element_blank(), </span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     panel.grid.minor = element_blank()) + scale_colour_manual(values = colors)</span></span></code></pre></div>
+</div>
+<div id="step-6-drawing-qq-plot-for-group-comparison-on-the-distance-measure" class="section level6">
+<h6>Step 6: Drawing QQ plot for group comparison on the distance measure</h6>
+<p>Although MatchIt provides a function to draw QQ plots (e.g., plot(m_near), the default plot type for MatchIt results), it only generates QQ plots for covariates, not for the overall distance measure. The following function plot_ps_qq() can draw it for you.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## QQ plot for overall distance measure (propensity score in our case).</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">## If the matching result is good enough, most points in the QQ plot after </span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">## matching would rest on the 45-degree line.</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>m_near_qq <span class="ot">&lt;-</span> <span class="fu">plot_ps_qq</span>(m_near)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>m_near_qq<span class="sc">$</span>plot</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="step-7-computing-variance-ratio-and-residual-variance-ratio" class="section level6">
+<h6>Step 7: Computing variance ratio and residual variance ratio</h6>
+<p>Besides SMD, Rubin (2001) proposed two other diagnostics for propensity score matching, the one is the ratio of the variances of the propensity scores between the two groups (treatment group to control group), the other is the ratio of the variance of the residuals orthogonal to the propensity scores between the two groups, for each of the covariates. As for the criterion, the ideal ratio should be close to one, which means variances from two groups are similar. A ratio of less than 1/2 or larger than 2 is far too extreme (Rubin, 2001). These two diagnostics are less popular in practice. We can compute both with the following functions.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing variance ratio of propensity score</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>m_near_var_ratio <span class="ot">&lt;-</span> <span class="fu">compute_var_ratio</span>(m_near)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>m_near_var_ratio</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  var_tr_bf var_ctl_bf  var_tr_af var_ctl_af   ratio_bf   ratio_af </span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.04464654 0.05326882 0.04440520 0.06710806 0.83813639 0.66169708</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Column names explanation:</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="do">## var_tr_bf: variance of treatment group before matching</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">## var_ctl_bf: variance of control group before matching</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">## var_tr_af: variance of treatment group after matching</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">## var_ctl_af: variance of control group after matching</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="do">## ratio_bf: variance ratio before matching</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="do">## ratio_af: variance ratio after matching</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing residual variance ratio for each covariate</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Checking the formula for propensity score estimation</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">parse_formula</span>(m_near)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $grouping</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;treat&quot;</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $covec</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;re74&quot;   &quot;re75&quot;   &quot;age&quot;    &quot;educ&quot;   &quot;black&quot;  &quot;hispan&quot;</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="do">## This auxiliary function shows covariates in the formula to help decide </span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="do">## variable types.</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="do">## The function requires the original data set, the MatchIt object (except for </span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="do">## results from &quot;exact&quot; or &quot;subclass&quot; method), and a vector specifying </span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="do">## covariate types.</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Valid values for covariate types:</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="do">## do not include this covariate: &#39;excluded&#39;, &#39;0&#39;, 0, NA;</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="do">## continuous variable: &#39;continuous&#39;, &#39;1&#39;, 1;</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="do">## dichotomous variable: &#39;binary&#39;, &#39;2&#39;, 2;</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="do">## ordinal variable: &#39;ordinal&#39;, &#39;3&#39;, 3.</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="do">## Note a vector in R does not support different types of values, thus these </span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="do">## valid values cannot be mixed.</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="do">## Note multinomial variable is not applicable to this function.</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="do">## The &#39;discard&#39; argument is logical to judge if some cases were discarded </span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="do">## before matching. The default is FALSE, no discard before matching. </span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="fu">compute_res_var_ratio</span>(<span class="at">original_data =</span> lalonde, <span class="at">mi_obj =</span> m_near, <span class="at">type_vec =</span> </span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="at">discard =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $before_matching</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]         NA  0.9448780  0.4710396  0.4946834 35.8923250  0.4966405</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $after_matching</span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]         NA  1.1627099  0.4987511  0.3960292 21.7381563  0.2873486</span></span></code></pre></div>
+</div>
+<div id="summary" class="section level4">
+<h4>Summary</h4>
+<p>As shown above, MatchItEXT package helps diagnose the result of matching by calculating SMD, variance ratio and residual variance ratio. Besides that, it can draw SMD dot-and-line plot and QQ plot to compare the matching result before and after matching. These are unavailable in MatchIt package. Therefore, it is a supplementary package to MatchIt.</p>
+</div>
+<div id="references" class="section level4">
+<h4>References</h4>
+<p>Austin, P. C. (2011). An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies. <em>Multivariate Behavioral Research, 46</em>(3), 399–424. <a href="https://doi.org/10.1080/00273171.2011.568786" class="uri">https://doi.org/10.1080/00273171.2011.568786</a></p>
+<p>Ho, D. E., Imai, K., King, G., &amp; Stuart, E. A. (2011). MatchIt: Nonparametric Preprocessing for Parametric Causal Inference. <em>Journal of Statistical Software, 42</em>(8). <a href="https://doi.org/10.18637/jss.v042.i08" class="uri">https://doi.org/10.18637/jss.v042.i08</a></p>
+<p>Rubin, D. B. (2001). Using propensity scores to help design observational studies: Application to the tobacco litigation. <em>Health Services and Outcomes Research Methodology, 2</em>(3/4), 169–188. <a href="https://doi.org/10.1023/A:1020363010465" class="uri">https://doi.org/10.1023/A:1020363010465</a></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
